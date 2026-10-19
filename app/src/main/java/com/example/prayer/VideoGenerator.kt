@@ -1,3 +1,4 @@
+
 package com.example.prayer
 
 import android.content.Context
@@ -46,8 +47,6 @@ object VideoGenerator {
         val canvas = Canvas(bitmap)
         
         val typeface = Typeface.createFromAsset(context.assets, "font.ttf")
-        
-        // Heading: Yellow, strictly below the 300px top margin
         val headingPaint = Paint().apply {
             color = Color.YELLOW
             this.typeface = typeface
@@ -55,8 +54,6 @@ object VideoGenerator {
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
         }
-        
-        // Body Text: White
         val textPaint = TextPaint().apply {
             color = Color.WHITE
             this.typeface = typeface
@@ -66,12 +63,8 @@ object VideoGenerator {
 
         for (i in 0 until totalFrames) {
             canvas.drawColor(Color.BLACK)
-            
-            // Heading at Y=350 (Respects the "top 300px strictly no text" rule)
             canvas.drawText("PRAYER", width / 2f, 350f, headingPaint)
             
-            // Body Text: 680px width, starts at Y=450, max height 1170px 
-            // (450 + 1170 = 1620. 1920 - 1620 = 300px bottom margin. Strictly respected.)
             val textWidth = 680f
             val textMaxHeight = 1170f 
             val textX = (width - textWidth) / 2f
