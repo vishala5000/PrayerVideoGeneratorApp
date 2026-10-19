@@ -1,3 +1,4 @@
+
 name: Build and Sign APK
 
 on:
@@ -18,13 +19,12 @@ jobs:
           distribution: 'temurin'
 
       - name: Decode Keystore
-        run: echo "${{ env.KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
+        run: echo "${ env.KEYSTORE_BASE64 }" | base64 --decode > app/release.keystore
         env:
-          # These are injected by the Colab script automatically
-          KEYSTORE_BASE64: "${{ secrets.KEYSTORE_BASE64 }}" 
-          KEYSTORE_PASSWORD: "${{ secrets.KEYSTORE_PASSWORD }}"
-          KEY_ALIAS: "${{ secrets.KEY_ALIAS }}"
-          KEY_PASSWORD: "${{ secrets.KEY_PASSWORD }}"
+          KEYSTORE_BASE64: "MIIKTAIBAzCCCfYGCSqGSIb3DQEHAaCCCecEggnjMIIJ3zCCBbYGCSqGSIb3DQEHAaCCBacEggWjMIIFnzCCBZsGCyqGSIb3DQEMCgECoIIFQDCCBTwwZgYJKoZIhvcNAQUNMFkwOAYJKoZIhvcNAQUMMCsEFIjgbBaJoMst35aAU8Ae++h/IsgQAgInEAIBIDAMBggqhkiG9w0CCQUAMB0GCWCGSAFlAwQBKgQQkvU/GCdhB3L9Pg0Y4LphhgSCBNDHRoWqxViYjwTbRGn1sTenGN+YfKW9Pvsi363CBxorrc8Pe4/8XlI4Qk5XkOT1ZA9CJFsDfEkhEEC+NcAX1HwMio6KxMjRz4BPWzNGicYs9nHeCbnmaa+Hr6LRxyMZ/rYQVhlf+gqoSTY+XVvTwzFWfNN2KJ1ZFpBLS1rstWUK1DidPrD2HozWTRX4aiKwkHoF+Q2CFxzGI0X2tBzgcjfSnSYrrNOBZ7tmE9Pazr+zNM8mNSCzblY9Yg1gb6F4843pu0hlFOAJAAP0p922i16lPFbjM6ySfp2kwPhniRdXa7xrSRe1ym1Q/OsCyY6vltgbRS33efX9l66AjuhQyc1ot6zjk3cWAORYM3UQNvQk4B0KJQdN2mpvHlDMY7BaAmlhiSN14W8BCxpwh2d5RzMI6xmJEFlFA0QpYkUlr6Kjm3Ww/xE1OxyoWfgTStEa4tluHCahSjhdzvr0g+Ku0yftO+IccaySBWMDiKlgcJP0/KU0KHjxGeWQFKK9Xqcg/f7l72TyRM2d/Hok8UYXm3B/0EG3W2zJUpd7X1PXYBLD5yawvp4pIYIHSF9c+wKFw1yCzeQgwRaJo25+jjPXTQM6Jrsk5tq2eDwuGi5R547hds2RZgg0TFy1m9Za/MS/Dj7wp7M91q1KmzVst+LMbsgtZxVyaqqk5mprz+H0dlZT6YJOrpEyBn1dh1AHgOxOpXK6yI+zIVNvn4SO4OZbCQ2dwciEbIPMo9Bolcr00MnLTs0fVaXI/3ifJfSdaX4v7rEg14jJKLDbNodKFjdUHpgP5BxiwXU8wjGMVrOAUc7402QH7JMGumcFzTBco3+K5kmZTOrvA4r2KpoO57vs5oF6neKDsBus3PndBBvQXFxwCrLtLrnvib9MRVKjuYMCcrhTId9U7+eF3fAH0TZhJZGP7AZOXR1Yup9bZP5I5y9R63tVhUsio9iPHaYVgNKR1wX4OQ286YxGYuLDulJS9aNj8yisyCQnD3ee3FdSWvs54m4IqpBnHhB6MQaQ9OUan9lcvTye0T4DYzCAEzpHTPMMhJ7VcdvG8k+i4QBpJA9m0byluKeqvay/Y2aK2V9rnGXZirnuwdHOzZt6JHZgWTrlLavQw8VQ8EKwc6E0vZWnYuukGYSXVhAF/JmyhoLfdzSWVQQGXmg+V57n7LlQBY+FfzfAVvbjcQWZc2HhyoWeWWVFtFteeT/Mq2QXs836armYbawAEbYckTvIMSZ0UoqjTuAUHQ2KmuU5992tnQx51rTPbCv1SOgX5EeRPhQ4PKLqOsihTvvc5J5TNGyL5XA0aF0YRXvYmf28kQXykJtc5ochJm5NQgA6oYk8bvuq4/Z3V1Br6oFuGxVXP9CLKUynKeuDgInUMnpnMSwizyDOX2171mNusq7XVMevE75KwmzW7Q/8DiK7yEfJ8AODAMquviJXKcpO1f4k3zBnpINFkjZat/NM4RGn3gJJqmi9eytviNoNO48gRZ9UdtuIzGR2HGQO2GVYgh7VhJjQ4N+4sex3JNhvdEZqae8ISJOob2oLv5EcB6T7dP7d2ATm1zU3OY+A0qWwVZJhZiVnsB8MMN5PqCn0+zX7UEF3dwqqt1/jNjW2lV0YEim7UulrlAEI+2jb0+EeUZ2w0rq1OrD1ljFIMCMGCSqGSIb3DQEJFDEWHhQAcAByAGEAeQBlAHIAXwBrAGUAeTAhBgkqhkiG9w0BCRUxFAQSVGltZSAxNzkyNDMzODE5NTczMIIEIQYJKoZIhvcNAQcGoIIEEjCCBA4CAQAwggQHBgkqhkiG9w0BBwEwZgYJKoZIhvcNAQUNMFkwOAYJKoZIhvcNAQUMMCsEFAIAeLYnoF1NvAmbX0z9Qdb57KHaAgInEAIBIDAMBggqhkiG9w0CCQUAMB0GCWCGSAFlAwQBKgQQguzjkHe/fy5pFup3QLMG0ICCA5Aj2JLUSw7sHqdewFsswRZs3K7ZKteJoLeIHzeevTbh2km/8xjaPnkTH0pAcovbpW1yWOtDrWkwZfHrGhsNSkC6NeBu8arSWaHz7TNDuOng3nxldg259qYBB4FnfByXOkkuysMHe8+BlRXuKIvZfblcbjQfnh8Z1vJxi5oc7oAz9gUxUIeQkMzzOlB3dwrE+dTg06rUciCl1ra9qifX4TxMuoUsknAW0zCGj2h6tC5N0Jp+iBl7n8j3UmJbS0VAarmWf9RM+zbv2IXN5ovftF2ZKwTUL28t0AoOPfqaEZWMYdgUoZBhFZVih1VqMZYiVTMXGQBMFihkG91GwbpMAOw3jX6JxSQhqNT6wFyhW3OvW5ULB/sxpaSBixMksQy0o4NYqkPumNKR7DCoK6ZDR81Gkjy0EoU44yLDJKBVS9OmRalV8oFHFIi+Q7wB8wea0xRNYi6Kg0w960GlqfCQa5sc2wEsECuLJz2QpdJi3PRDQKsVVey7YlgYhguJ9s9XuPTxhOtnwZ6g9LZQy4y06axb38mr6DXV8EjVsSCHkUkppkXSAM4AJ5lM9oTXpmUfpB3U8bA2YdLa6ZtNiMeQyB8LM9AJfgSf4IeBKvk5V+1bHaPfhydOaNlXcfijHoBqMBlVNgdOd44V1iqdfVrI+Q7aGFZE2WmKaKqIke/1sshKmxI4IZMISePNPGpsFi3PsrqF5vucVJSMkrB6iLnUN6hhmyqQ1XdLUm1OxazycpXIUCx6wTuQfOBx2KQKYFh/fMvoM0ue9SvgJwFCSthAnqoj9cyewqticNQHFQaMc94Y8hsJgn42p1vFfOVqIQ0gUxKkJCuJctnfbgDvSO+ZQ1h80fRHDpyqP/UTQ7jvsbzu5ShmQ3rGNg0tXlAmwRMcu9d4nAF08c2+ENHHOCDNC1ZA3sT3w83zAE/7QHO53PgpvPag9urrLaVH0CAHNOggmTPlWlZ1UaYF+mI32uZBtGtabq75Xbf9OUMv2zdpOuVGLWbURQ/E3arB2cnxh/N3EPUIWUUtR0IpLgWXUAWpb3IURybo8hNE273j1JyQnElERNxGd9Uz2vcgD3vW0dOXCzS5AD+vZKn63dWdfq5K93bU+YpUFnPx4CQHPfaYILztSDLjtTEFZznpv7IX+8SJ54lRDtKvpefssy9Qrku2wt2YohBBMAmG3Odd8/1x8MkFs3SsRrqJgSATZE+iSJcJzVswTTAxMA0GCWCGSAFlAwQCAQUABCChVEMk5gedFWWhRPBXUn7C1F5CxHlgOOqz+KrLwyGIbwQU3/T3STprL/SduXOIIG65d4qdy7sCAicQ"
+          KEYSTORE_PASSWORD: "AutoSignPass2024"
+          KEY_ALIAS: "prayer_key"
+          KEY_PASSWORD: "AutoSignPass2024"
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
@@ -35,9 +35,9 @@ jobs:
           APKSIGNER=$ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner
           $APKSIGNER sign \
             --ks app/release.keystore \
-            --ks-pass pass:${{ env.KEYSTORE_PASSWORD }} \
-            --ks-key-alias ${{ env.KEY_ALIAS }} \
-            --key-pass pass:${{ env.KEY_PASSWORD }} \
+            --ks-pass pass:${ env.KEYSTORE_PASSWORD } \
+            --ks-key-alias ${ env.KEY_ALIAS } \
+            --key-pass pass:${ env.KEY_PASSWORD } \
             --out app-release-signed.apk \
             app/build/outputs/apk/debug/app-debug.apk
 
