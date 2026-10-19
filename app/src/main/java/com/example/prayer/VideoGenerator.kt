@@ -1,4 +1,3 @@
-
 package com.example.prayer
 
 import android.content.Context
@@ -126,17 +125,39 @@ class EGLHelper {
     fun start(surface: android.view.Surface) {
         egl = javax.microedition.khronos.egl.EGLContext.getEGL() as javax.microedition.khronos.egl.EGL10
         eglDisplay = egl!!.eglGetDisplay(javax.microedition.khronos.egl.EGL10.EGL_DEFAULT_DISPLAY)
-        egl!!.eglInitialize(eglDisplay, IntArray(2), 0, IntArray(2), 0)
-        val configAttribs = intArrayOf(javax.microedition.khronos.egl.EGL10.EGL_RED_SIZE, 8, javax.microedition.khronos.egl.EGL10.EGL_GREEN_SIZE, 8, javax.microedition.khronos.egl.EGL10.EGL_BLUE_SIZE, 8, javax.microedition.khronos.egl.EGL10.EGL_ALPHA_SIZE, 8, javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE, 4, javax.microedition.khronos.egl.EGL10.EGL_NONE)
+        
+        // Corrected: eglInitialize only takes 2 arguments
+        val version = IntArray(2)
+        egl!!.eglInitialize(eglDisplay, version)
+        
+        val configAttribs = intArrayOf(
+            javax.microedition.khronos.egl.EGL10.EGL_RED_SIZE, 8,
+            javax.microedition.khronos.egl.EGL10.EGL_GREEN_SIZE, 8,
+            javax.microedition.khronos.egl.EGL10.EGL_BLUE_SIZE, 8,
+            javax.microedition.khronos.egl.EGL10.EGL_ALPHA_SIZE, 8,
+            javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE, 4, // EGL_OPENGL_ES2_BIT
+            javax.microedition.khronos.egl.EGL10.EGL_NONE
+        )
         val configs = arrayOfNulls<javax.microedition.khronos.egl.EGLConfig>(1)
         val numConfigs = IntArray(1)
-        egl!!.eglChooseConfig(eglDisplay, configAttribs, 0, configs, 0, 1, numConfigs, 0)
-        val contextAttribs = intArrayOf(0x3098, 2, javax.microedition.khronos.egl.EGL10.EGL_NONE)
-        eglContext = egl!!.eglCreateContext(eglDisplay, configs[0], javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT, contextAttribs, 0)
-        eglSurface = egl!!.eglCreateWindowSurface(eglDisplay, configs[0], surface, null, 0)
+        
+        // Corrected: eglChooseConfig signature matches Android API exactly
+        egl!!.eglChooseConfig(eglDisplay, configAttribs, configs, 1, numConfigs)
+        
+        val contextAttribs = intArrayOf(0x3098, 2, javax.microedition.khronos.egl.EGL10.EGL_NONE) // EGL_CONTEXT_CLIENT_VERSION, 2
+        
+        // Corrected: eglCreateContext signature matches Android API exactly
+        eglContext = egl!!.eglCreateContext(eglDisplay, configs[0], javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT, contextAttribs)
+        
+        // Corrected: eglCreateWindowSurface signature matches Android API exactly
+        eglSurface = egl!!.eglCreateWindowSurface(eglDisplay, configs[0], surface, null)
         egl!!.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)
     }
-    fun swap() { egl?.eglSwapBuffers(eglDisplay, eglSurface) }
+
+    fun swap() { 
+        egl?.eglSwapBuffers(eglDisplay, eglSurface) 
+    }
+
     fun stop() {
         egl?.eglMakeCurrent(eglDisplay, javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE, javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE, javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT)
         egl?.eglDestroySurface(eglDisplay, eglSurface)
