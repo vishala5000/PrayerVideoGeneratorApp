@@ -45,10 +45,8 @@ object VideoGenerator {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         
-        // Load custom font for ALL text
         val typeface = Typeface.createFromAsset(context.assets, "font.ttf")
         
-        // Heading uses font.ttf
         val headingPaint = Paint().apply {
             color = Color.YELLOW
             this.typeface = typeface
@@ -58,18 +56,16 @@ object VideoGenerator {
         }
         
         val textWidth = 680f
-        val textMaxHeight = 1170f // 1920 - 300 (top margin) - 450 (start Y) = 1170
+        val textMaxHeight = 1170f
         
-        // Body text uses font.ttf
         val textPaint = TextPaint().apply {
             color = Color.WHITE
             this.typeface = typeface
             isAntiAlias = true
         }
         
-        // AUTO-SIZE: Find perfect font size that fits ALL text without cutoff
         var optimalTextSize = 70f
-        val minTextSize = 20f // Can go smaller to ensure text always fits
+        val minTextSize = 20f
         
         while (optimalTextSize >= minTextSize) {
             textPaint.textSize = optimalTextSize
@@ -79,23 +75,20 @@ object VideoGenerator {
                 .build()
             
             if (layout.height <= textMaxHeight) {
-                break // Text fits perfectly at this size
+                break
             }
-            optimalTextSize -= 1f // Shrink by 1f for more precision
+            optimalTextSize -= 1f
         }
         
         textPaint.textSize = optimalTextSize
 
         for (i in 0 until totalFrames) {
             canvas.drawColor(Color.BLACK)
-            
-            // Draw heading with font.ttf
             canvas.drawText("PRAYER", width / 2f, 350f, headingPaint)
             
             val textX = (width - textWidth) / 2f
             val textY = 450f
             
-            // Create layout with auto-sized text - NO clipRect to prevent cutoff
             val staticLayout = StaticLayout.Builder.obtain(prayerLine, 0, prayerLine.length, textPaint, textWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
                 .setLineSpacing(0f, 1.3f)
@@ -103,7 +96,6 @@ object VideoGenerator {
 
             canvas.save()
             canvas.translate(textX, textY)
-            // REMOVED clipRect - text will never be cut off now
             staticLayout.draw(canvas)
             canvas.restore()
 
