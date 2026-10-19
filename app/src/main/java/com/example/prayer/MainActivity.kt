@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startGeneration() {
-        // Split by double newlines (paragraph breaks) to separate each prayer
         val inputText = etPrayers.text.toString()
         val prayers = inputText.split(Regex("\\n\\s*\\n"))
             .map { it.trim() }
@@ -66,7 +65,6 @@ class MainActivity : AppCompatActivity() {
                     progressBar.progress = currentVideo
                 }
                 
-                // STRICT NAMING: prayer1.mp4, prayer2.mp4, prayer3.mp4, etc.
                 val outFile = File(filesDir, "prayer${currentVideo}.mp4")
                 try {
                     VideoGenerator.generate(this@MainActivity, prayer, outFile)
