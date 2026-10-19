@@ -53,27 +53,44 @@ object VideoGenerator {
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
         }
+        
+        // Auto-size text: Start at 70f, shrink if needed to fit within 680x1320
+        val textWidth = 680f
+        val textMaxHeight = 1170f
+        var optimalTextSize = 70f
+        val minTextSize = 40f
+        
         val textPaint = TextPaint().apply {
             color = Color.WHITE
             this.typeface = typeface
-            textSize = 70f
             isAntiAlias = true
         }
+        
+        // Find optimal font size that fits the text
+        while (optimalTextSize >= minTextSize) {
+            textPaint.textSize = optimalTextSize
+            val layout = StaticLayout.Builder.obtain(prayerLine, 0, prayerLine.length, textPaint, textWidth.toInt())
+                .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .build()
+            
+            if (layout.height <= textMaxHeight) {
+                break // Text fits at this size
+            }
+            optimalTextSize -= 2f // Shrink by 2f and try again
+        }
+        
+        textPaint.textSize = optimalTextSize
 
         for (i in 0 until totalFrames) {
             canvas.drawColor(Color.BLACK)
             canvas.drawText("PRAYER", width / 2f, 350f, headingPaint)
             
-            val textWidth = 680f
-            val textMaxHeight = 1170f 
             val textX = (width - textWidth) / 2f
-            val textY = 450f 
+            val textY = 450f
             
             val staticLayout = StaticLayout.Builder.obtain(prayerLine, 0, prayerLine.length, textPaint, textWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
                 .setLineSpacing(0f, 1.3f)
-                .setMaxLines((textMaxHeight / 90).toInt())
-                .setEllipsize(null)
                 .build()
 
             canvas.save()
@@ -125,38 +142,26 @@ class EGLHelper {
     fun start(surface: android.view.Surface) {
         egl = javax.microedition.khronos.egl.EGLContext.getEGL() as javax.microedition.khronos.egl.EGL10
         eglDisplay = egl!!.eglGetDisplay(javax.microedition.khronos.egl.EGL10.EGL_DEFAULT_DISPLAY)
-        
-        // Corrected: eglInitialize only takes 2 arguments
         val version = IntArray(2)
         egl!!.eglInitialize(eglDisplay, version)
-        
         val configAttribs = intArrayOf(
             javax.microedition.khronos.egl.EGL10.EGL_RED_SIZE, 8,
             javax.microedition.khronos.egl.EGL10.EGL_GREEN_SIZE, 8,
             javax.microedition.khronos.egl.EGL10.EGL_BLUE_SIZE, 8,
             javax.microedition.khronos.egl.EGL10.EGL_ALPHA_SIZE, 8,
-            javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE, 4, // EGL_OPENGL_ES2_BIT
+            javax.microedition.khronos.egl.EGL10.EGL_RENDERABLE_TYPE, 4,
             javax.microedition.khronos.egl.EGL10.EGL_NONE
         )
         val configs = arrayOfNulls<javax.microedition.khronos.egl.EGLConfig>(1)
         val numConfigs = IntArray(1)
-        
-        // Corrected: eglChooseConfig signature matches Android API exactly
         egl!!.eglChooseConfig(eglDisplay, configAttribs, configs, 1, numConfigs)
-        
-        val contextAttribs = intArrayOf(0x3098, 2, javax.microedition.khronos.egl.EGL10.EGL_NONE) // EGL_CONTEXT_CLIENT_VERSION, 2
-        
-        // Corrected: eglCreateContext signature matches Android API exactly
+        val contextAttribs = intArrayOf(0x3098, 2, javax.microedition.khronos.egl.EGL10.EGL_NONE)
         eglContext = egl!!.eglCreateContext(eglDisplay, configs[0], javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT, contextAttribs)
-        
-        // Corrected: eglCreateWindowSurface signature matches Android API exactly
         eglSurface = egl!!.eglCreateWindowSurface(eglDisplay, configs[0], surface, null)
         egl!!.eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext)
     }
 
-    fun swap() { 
-        egl?.eglSwapBuffers(eglDisplay, eglSurface) 
-    }
+    fun swap() { egl?.eglSwapBuffers(eglDisplay, eglSurface) }
 
     fun stop() {
         egl?.eglMakeCurrent(eglDisplay, javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE, javax.microedition.khronos.egl.EGL10.EGL_NO_SURFACE, javax.microedition.khronos.egl.EGL10.EGL_NO_CONTEXT)
