@@ -17,14 +17,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Decode Keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
-
       - name: Make gradlew executable
         run: chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
+
+      - name: Auto-Generate Keystore
+        run: |
+          keytool -genkeypair -noprompt \
+            -alias prayer_key \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -keystore app/release.keystore \
+            -storepass AutoSignPass2024 \
+            -keypass AutoSignPass2024 \
+            -dname "CN=Android, O=PrayerApp, C=US" \
+            -storetype PKCS12
 
       - name: Sign APK with apksigner
         run: |
@@ -32,9 +40,9 @@ jobs:
           APKSIGNER=$ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner
           $APKSIGNER sign \
             --ks app/release.keystore \
-            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
-            --ks-key-alias ${{ secrets.KEY_ALIAS }} \
-            --key-pass pass:${{ secrets.KEY_PASSWORD }} \
+            --ks-pass pass:AutoSignPass2024 \
+            --ks-key-alias prayer_key \
+            --key-pass pass:AutoSignPass2024 \
             --out app-release-signed.apk \
             app/build/outputs/apk/debug/app-debug.apk
 
