@@ -1,0 +1,51 @@
+
+name: Build and Sign APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Decode Keystore
+        run: echo "${ env.KEYSTORE_BASE64 }" | base64 --decode > app/release.keystore
+        env:
+          KEYSTORE_BASE64: "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"
+          KEYSTORE_PASSWORD: "AutoSignPass2024"
+          KEY_ALIAS: "prayer_key"
+          KEY_PASSWORD: "AutoSignPass2024"
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Sign APK with apksigner
+        run: |
+          BUILD_TOOLS=$(ls $ANDROID_HOME/build-tools/ | sort -V | tail -n 1)
+          APKSIGNER=$ANDROID_HOME/build-tools/$BUILD_TOOLS/apksigner
+          $APKSIGNER sign \
+            --ks app/release.keystore \
+            --ks-pass pass:${ env.KEYSTORE_PASSWORD } \
+            --ks-key-alias ${ env.KEY_ALIAS } \
+            --key-pass pass:${ env.KEY_PASSWORD } \
+            --out app-release-signed.apk \
+            app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: PrayerVideoGenerator-Signed
+          path: app-release-signed.apk
