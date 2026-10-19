@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp">
+    android:layout_width="match_parent" android:layout_height="match_parent" android:padding="16dp"
+    android:background="#FFFFFF">
     
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
         
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Add Prayers One by One:" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="8dp"/>
+            android:text="Add Prayers One by One:" android:textSize="18sp" android:textStyle="bold" 
+            android:layout_marginBottom="8dp" android:textColor="#000000"/>
         
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
             <EditText android:id="@+id/etSinglePrayer" android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:hint="Enter a single prayer line" android:inputType="text" android:maxLines="1"/>
-            <Button android:id="@+id/btnAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Add"/>
+                android:layout_weight="1" android:hint="Enter a single prayer line" android:inputType="text" 
+                android:maxLines="1" android:textColor="#000000" android:textColorHint="#757575"
+                android:background="@android:drawable/edit_text"/>
+            <Button android:id="@+id/btnAdd" android:layout_width="wrap_content" android:layout_height="wrap_content" 
+                android:text="Add" android:layout_marginStart="8dp"/>
         </LinearLayout>
 
         <TextView android:id="@+id/tvPrayerList" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="16dp" android:layout_marginBottom="16dp" android:text="No prayers added yet."
-            android:background="#E0E0E0" android:padding="12dp" android:minHeight="100dp" android:textColor="#000000"/>
+            android:background="#F5F5F5" android:padding="12dp" android:minHeight="100dp" 
+            android:textColor="#000000" android:textSize="14sp"/>
 
         <Button android:id="@+id/btnGenerate" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Generate Separate Videos" android:enabled="false"/>
@@ -24,7 +30,7 @@
             android:layout_marginTop="16dp" android:visibility="gone" style="?android:attr/progressBarStyleHorizontal"/>
             
         <TextView android:id="@+id/tvStatus" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" android:text="Ready."/>
+            android:layout_marginTop="8dp" android:text="Ready." android:textColor="#000000" android:textSize="14sp"/>
             
         <Button android:id="@+id/btnDownloadZip" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:text="Download All as ZIP" android:layout_marginTop="24dp" android:enabled="false"/>
