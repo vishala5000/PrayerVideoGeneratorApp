@@ -45,7 +45,10 @@ object VideoGenerator {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         
+        // Load custom font for ALL text
         val typeface = Typeface.createFromAsset(context.assets, "font.ttf")
+        
+        // Heading uses font.ttf
         val headingPaint = Paint().apply {
             color = Color.YELLOW
             this.typeface = typeface
@@ -54,40 +57,45 @@ object VideoGenerator {
             textAlign = Paint.Align.CENTER
         }
         
-        // Auto-size text: Start at 70f, shrink if needed to fit within 680x1320
         val textWidth = 680f
-        val textMaxHeight = 1170f
-        var optimalTextSize = 70f
-        val minTextSize = 40f
+        val textMaxHeight = 1170f // 1920 - 300 (top margin) - 450 (start Y) = 1170
         
+        // Body text uses font.ttf
         val textPaint = TextPaint().apply {
             color = Color.WHITE
             this.typeface = typeface
             isAntiAlias = true
         }
         
-        // Find optimal font size that fits the text
+        // AUTO-SIZE: Find perfect font size that fits ALL text without cutoff
+        var optimalTextSize = 70f
+        val minTextSize = 20f // Can go smaller to ensure text always fits
+        
         while (optimalTextSize >= minTextSize) {
             textPaint.textSize = optimalTextSize
             val layout = StaticLayout.Builder.obtain(prayerLine, 0, prayerLine.length, textPaint, textWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                .setLineSpacing(0f, 1.3f)
                 .build()
             
             if (layout.height <= textMaxHeight) {
-                break // Text fits at this size
+                break // Text fits perfectly at this size
             }
-            optimalTextSize -= 2f // Shrink by 2f and try again
+            optimalTextSize -= 1f // Shrink by 1f for more precision
         }
         
         textPaint.textSize = optimalTextSize
 
         for (i in 0 until totalFrames) {
             canvas.drawColor(Color.BLACK)
+            
+            // Draw heading with font.ttf
             canvas.drawText("PRAYER", width / 2f, 350f, headingPaint)
             
             val textX = (width - textWidth) / 2f
             val textY = 450f
             
+            // Create layout with auto-sized text - NO clipRect to prevent cutoff
             val staticLayout = StaticLayout.Builder.obtain(prayerLine, 0, prayerLine.length, textPaint, textWidth.toInt())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER)
                 .setLineSpacing(0f, 1.3f)
@@ -95,7 +103,7 @@ object VideoGenerator {
 
             canvas.save()
             canvas.translate(textX, textY)
-            canvas.clipRect(0f, 0f, textWidth, textMaxHeight)
+            // REMOVED clipRect - text will never be cut off now
             staticLayout.draw(canvas)
             canvas.restore()
 
